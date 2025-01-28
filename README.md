@@ -33,10 +33,10 @@ This project is a Flask web application that integrates a Retrieval-Augmented Ge
         Returning a polite fallback response (e.g., "I'm sorry, I couldn't find an answer. Please check our documentation.")
 
 ### Technologies Used:
-  Backend: Flask
-  Frontend: HTML, CSS, JavaScript
-  LLM Framework: LangChain, Google Gemini
-  Vector Store: FAISS (Facebook AI Similarity Search)
-  Database: MongoDB (for logging)
-  Other Libraries: Python libraries such as Flask-Cors, Flask-PyMongo, and PyPDF2
+ 1. Backend: Flask
+ 2. Frontend: HTML, CSS, JavaScript
+ 3. LLM Framework: LangChain, Google Gemini
+ 4. Vector Store: FAISS (Facebook AI Similarity Search)
+ 5. Database: MongoDB (for logging)
+ 6. Other Libraries: Python libraries such as Flask-Cors, Flask-PyMongo, and PyPDF2
    
