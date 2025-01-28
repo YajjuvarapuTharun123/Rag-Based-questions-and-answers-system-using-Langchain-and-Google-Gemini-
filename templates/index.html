@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Assistant</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+
+        /* Input box */
+        #query {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        #query:focus {
+            border-color: #5e81f4;
+        }
+
+        /* Button */
+        button {
+            padding: 12px 20px;
+            background-color: #5e81f4;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4a6fdb;
+        }
+
+        button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        /* Response area */
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #333;
+            font-size: 1.1rem;
+            min-height: 50px;
+            display: none;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ddd;
+            border-top: 4px solid #5e81f4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error message */
+        .error {
+            color: red;
+            font-size: 1rem;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Intelligent FAQ Assistant</h1>
+        <input type="text" id="query" placeholder="Ask your question here..." oninput="toggleButton()">
+        <button id="askButton" onclick="askQuestion()" disabled>Ask</button>
+        <div class="spinner" id="loadingSpinner" style="display: none;"></div>
+        <p id="response"></p>
+        <p class="error" id="errorMessage" style="display: none;"></p>
+    </div>
+
+    <script>
+        // Toggle button state based on input
+        function toggleButton() {
+            const query = document.getElementById("query").value;
+            const button = document.getElementById("askButton");
+            button.disabled = !query.trim();
+        }
+
+        // Function to ask a question
+        function askQuestion() {
+            const query = document.getElementById("query").value;
+            const responseElement = document.getElementById("response");
+            const loadingSpinner = document.getElementById("loadingSpinner");
+            const errorMessage = document.getElementById("errorMessage");
+
+            // Clear previous response and error messages
+            responseElement.innerText = '';
+            errorMessage.style.display = 'none';
+            responseElement.style.display = 'none';
+
+            // Show loading spinner
+            loadingSpinner.style.display = 'block';
+
+            fetch('/ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loadingSpinner.style.display = 'none';
+                if (data.response) {
+                    responseElement.innerText = data.response;
+                    responseElement.style.display = 'block';
+                } else {
+                    responseElement.innerText = "Sorry, I couldn't find an answer.";
+                    responseElement.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                loadingSpinner.style.display = 'none';
+                console.error('Error:', error);
+                errorMessage.innerText = "An error occurred. Please try again later.";
+                errorMessage.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
